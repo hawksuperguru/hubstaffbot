@@ -1,0 +1,55 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'bot/style.css' %}">
+<link rel="stylesheet" href="https://bootswatch.com/4/cerulean/bootstrap.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="{% static 'bot/timesheet.js' %}"></script>
+
+
+<div class="container">
+<h2>Hubstaff TimeSheet</h2>
+
+<div class="datetime" value="{{ datetime }}">
+    {{ datetime }}
+</div>
+<div class="btn-crowded">
+    <form class="filter-form">
+        <input type="date" name="date-filter" id="date-filter">
+        <input type="submit" class="btn btn-primary" value="Display">
+    </form>
+    <div class="btn-save">
+        <button class="btn btn-danger" id="save_output">Save to CSV</button>
+    </div>
+</div>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th></th>
+            {% for user in users %}
+            <th>
+                {{ user.user_id.name }}
+            </th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        
+            {% for project in projects %}
+            <tr>
+                <td>{{ project.project_id.name }}</td>
+                {% for user in users%}
+                <td>
+                    {% for tracked in tracked_time_list %}
+                        
+                        {% if tracked.user_id.id ==  user.id and tracked.project_id.id == project.id %}
+                        {{ tracked.logged_time }}
+                        {% endif %}
+
+                    {% endfor %}
+                </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tr>
+    </tbody>
+</table>
+</div>

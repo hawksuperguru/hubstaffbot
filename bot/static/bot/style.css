@@ -1,0 +1,21 @@
+.filter-form {
+    width: 48%;
+    float: left;
+}
+
+.btn-save {
+    width: 48%;
+    float: left;
+}
+
+.btn-save button {
+    float: right;
+}
+
+.btn-crowded {
+    width: 100%;
+}
+
+.clear {
+    clear: both;
+}
