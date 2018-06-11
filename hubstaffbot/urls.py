@@ -8,5 +8,5 @@ admin.autodiscover()
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^hubbot/', include('bot.urls')),
+    url(r'^', include('bot.urls')),
 ]
