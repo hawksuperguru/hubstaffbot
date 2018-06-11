@@ -75,11 +75,11 @@ WSGI_APPLICATION = 'hubstaffbot.wsgi.application'
 DATABASES = {
     'default': {
 	    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'd682urdp15gqaj',
-        'USER': 'uihzjpowupjmwo',
-        'PASSWORD': 'd2b34d4e5141ce850d7248baa3b391e73585e10a9b5a464f3ab72703b27d4f8c',
-        'HOST': 'ec2-54-83-59-120.compute-1.amazonaws.com',
-        'PORT': '5432',
+        'NAME': 'hubstaffbot',
+        'USER': 'postgres',
+        'PASSWORD': 'superstar1123',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
