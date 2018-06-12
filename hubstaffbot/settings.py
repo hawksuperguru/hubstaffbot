@@ -73,7 +73,7 @@ WSGI_APPLICATION = 'hubstaffbot.wsgi.application'
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    'default': { 
 	    'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'd682urdp15gqaj',
         'USER': 'uihzjpowupjmwo',
