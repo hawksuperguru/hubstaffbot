@@ -179,13 +179,49 @@ def retrieve_organization(auth_token):
     organ_ids = []
 
     for organ in organs:
-        num_results = Organizations.objects.filter(organization_id= organ['id']).count()
         organ_ids.append(organ['id'])
-        if num_results == 0:
-            o = Organizations(organization_id=organ['id'],name=organ['name'])
-            o.save()
+        if not Organizations.objects.filter(
+            organization_id=organ['id']
+            ).exists():
+            Organizations.objects.create(
+                organization_id=organ['id'],
+                name=organ['name']
+            )
 
     return organ_ids
+
+
+def retrieve_members1(auth_token, organization_id, end_point):
+    members_endpoint = settings.HUBSTAFF_ENDPOINT + 'organizations/'+ organization_id + '/' + end_point
+
+    headers = {
+        'Auth-token': auth_token,
+        'App-token': settings.HUBSTAFF_APP_TOKEN,
+    }
+
+    re = requests.get(url=members_endpoint, headers=headers)
+
+    if end_point is "members":
+        contents = json.loads(re.text)['users']
+    elif end_point is "projects":
+        contents = json.loads(re.text)
+
+    members = json.loads(re.text)['users']
+    member_list = []
+
+    organ = Organizations.objects.get(organization_id=organization_id)
+
+    for member in members:
+        member_list.append(member['id'])
+        
+        Employees.objects.create(
+            employee_id=member['id'], 
+            name=member['name'], 
+            email=member['email'], 
+            organization_id=organ
+        )
+    
+    return member_list
 
 
 def retrieve_projects(auth_token, organization_id):
@@ -204,18 +240,19 @@ def retrieve_projects(auth_token, organization_id):
     organ = Organizations.objects.get(organization_id=organization_id)
 
     for proj in projs:
-        num_results = Projects.objects.filter(project_id= proj['id']).count()
         proj_list.append(proj['id'])
-        if num_results == 0:
-            
-            p = Projects(project_id=proj['id'], 
-                         name=proj['name'], 
-                         status=proj['status'], 
-                         description=proj['description'], 
-                         organization_id=organ
+        
+        if not Projects.objects.filter(
+            project_id=proj['id']
+            ).exists():
+            Projects.objects.create(
+                project_id=proj['id'], 
+                name=proj['name'], 
+                status=proj['status'], 
+                description=proj['description'], 
+                organization_id=organ
             )
-            p.save()
-    
+
     return proj_list
 
 
@@ -235,16 +272,18 @@ def retrieve_members(auth_token, organization_id):
     organ = Organizations.objects.get(organization_id=organization_id)
 
     for member in members:
-        num_results = Employees.objects.filter(employee_id= member['id']).count()
+
         member_list.append(member['id'])
-        if num_results == 0:
-            m = Employees(
+        if not Employees.objects.filter(
+            employee_id=member['id']
+            ).exists():
+           
+            Employees.objects.create(
                 employee_id=member['id'], 
                 name=member['name'], 
                 email=member['email'], 
                 organization_id=organ
             )
-            m.save()
     
     return member_list
     
@@ -260,7 +299,6 @@ def retrieve_activities(auth_token, user_id, project_id):
     headers = {
         'Auth-token': auth_token,
         'App-token': settings.HUBSTAFF_APP_TOKEN,
-        
     }
 
     query_string = {
@@ -282,18 +320,12 @@ def retrieve_activities(auth_token, user_id, project_id):
     for activity in activities:
         total_tracked += int(activity['tracked'])
     
-    num_results = LogTimes.objects.filter(
-                            project_id= project_id, 
-                            user_id = user_id, 
-                            log_date = yesterday
-    ).count()
-        
-    if num_results == 0:
-        l = LogTimes(project_id=project, 
-                     user_id=user, 
-                     log_date=yesterday, 
-                     logged_time = str(datetime.timedelta(seconds=total_tracked))
-        )
-        l.save()
+    LogTimes.objects.create(
+        project_id=project, 
+        user_id=user, 
+        log_date=yesterday, 
+        logged_time = str(datetime.timedelta(seconds=total_tracked))
+    )
+
     return total_tracked
 
