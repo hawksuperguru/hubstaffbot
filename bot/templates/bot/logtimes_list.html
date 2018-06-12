@@ -20,6 +20,7 @@
         <button class="btn btn-danger" id="save_output">Save to CSV</button>
     </div>
 </div>
+
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -40,7 +41,7 @@
                 <td>
                     {% for tracked in tracked_time_list %}
                         
-                        {% if tracked.user_id.id ==  user.id and tracked.project_id.id == project.id %}
+                        {% if tracked.user_id.id ==  user.user_id.id and tracked.project_id.id == project.project_id.id %}
                         {{ tracked.logged_time }}
                         {% endif %}
 
@@ -52,4 +53,5 @@
         </tr>
     </tbody>
 </table>
+
 </div>
